@@ -30,6 +30,10 @@ bash 交互式shell
 
 example : $ docker run --name webserver -d -p 80:80 nginx
 
+查看容器内IP
+```
+docker inspect 容器ID
+```
 获取镜像
 
     docker pull [仓库名]
