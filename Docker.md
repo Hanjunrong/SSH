@@ -63,6 +63,12 @@ FROM指定基础镜像   FROM scratch 从一个空白镜像开始
 
 RUN    1. shell格式  2. exec格式  RUN ["可执行文件", "参数1", "参数2"]
 
+```
+docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/local/etc/redis/redis.conf --name redis-slave1 -d redis redis-server /usr/local/etc/redis/redis.conf
+docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/local/etc/redis/redis.conf --name redis-slave2 -d redis redis-server /usr/local/etc/redis/redis.conf
+docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/local/etc/redis/redis.conf --name redis-slave3 -d redis redis-server /usr/local/etc/redis/redis.conf
+```
+
 
 
 
