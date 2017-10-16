@@ -76,6 +76,12 @@ Dockerfile 定制镜像
 
 FROM指定基础镜像   FROM scratch 从一个空白镜像开始
 
+构建镜像
+
+```
+docker build -t nginx:v3 .
+```
+
 RUN    1. shell格式  2. exec格式  RUN ["可执行文件", "参数1", "参数2"]
 
 ```
@@ -84,9 +90,38 @@ docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/
 docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/local/etc/redis/redis.conf --name redis-slave3 -d redis redis-server /usr/local/etc/redis/redis.conf
 ```
 
+Dockerfile  指令
 
+FROM   指定基础镜像
 
+RUN      执行命令行命令
 
+COPY    复制文件：
+
+	格式:	
+	COPY    <源路径>...	<目标路径>
+	COPY    ["<源路径1>",...	"<目标路径>"]
+
+​		原路径中可以使用通配符
+
+```
+COPY	hom*	/mydir/ 
+COPY	hom?.txt	/mydir/
+```
+
+​		使用COPY指令，源文件的各种元数据都会保留
+
+ADD    复制文件，仅在需要自动解压缩的场合使用 ADD。
+
+比如官方镜像ubuntu中：
+
+```
+FROM	scratch 
+ADD	ubuntu-xenial-core-cloudimg-amd64-root.tar.gz	/
+...
+```
+
+CMD容器启动命令
 
 
 
