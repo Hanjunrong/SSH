@@ -47,8 +47,19 @@ docker inspect 容器ID
 删除镜像
 
     docker rmi 
-
 删除所有 docker rmi $(docker images -q)
+
+虚悬镜像
+
+```
+docker	rmi	$(docker	images	-q	-f	dangling=true)
+```
+
+查看镜像内的历史记录
+
+```
+docker history nginx:v2
+```
 
 慎用 docker commit
 
