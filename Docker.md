@@ -74,7 +74,7 @@ Dockerfile 定制镜像
     FROM nginx
     RUN echo '<h1>Hello, Docker!</h1>' > /usr/share/nginx/html/index.html
 
-FROM指定基础镜像   FROM scratch 从一个空白镜像开始
+* FROM指定基础镜像   FROM scratch 从一个空白镜像开始
 
 构建镜像
 
@@ -82,7 +82,7 @@ FROM指定基础镜像   FROM scratch 从一个空白镜像开始
 docker build -t nginx:v3 .
 ```
 
-RUN    1. shell格式  2. exec格式  RUN ["可执行文件", "参数1", "参数2"]
+* RUN    1. shell格式  2. exec格式  RUN ["可执行文件", "参数1", "参数2"]
 
 ```
 docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/local/etc/redis/redis.conf --name redis-slave1 -d redis redis-server /usr/local/etc/redis/redis.conf
@@ -121,14 +121,12 @@ ADD	ubuntu-xenial-core-cloudimg-amd64-root.tar.gz	/
 ...
 ```
 
-CMD容器启动命令
+CMD    容器启动命令
 
-
-
-
-
-
-
+	CMD	指令的格式和  RUN	相似，也是两种格式：
+	* shell		格式：	CMD	<命令>	
+	* exec		格式：	CMD	["可执行文件",	"参数1",	"参数2"...]
+	* 参数列表格式：	CMD	 ["参数1",	"参数2"...]	。在指定了ENTRYPOINT指令后，用   CMD指定具体的参数
 
 
 
