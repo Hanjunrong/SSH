@@ -98,6 +98,12 @@ cat ubuntu.tar | sudo docker import - test/ubuntu:v1.0
 
 docker load也可以导入镜像存储文件到本地镜像库,含镜像历史
 
+从一个机器将镜像迁移到另一个机器,带进度条
+
+```
+docker save <镜像名> | bzip2 | pv | ssh <用户名>@<主机名> 'cat | docker load'
+```
+
 指定URL导入
 
 ```
@@ -110,7 +116,82 @@ docker import http://example.com/exampleimage.tgz example/imagerepo
 docker search centos //查找官方镜像
 ```
 
+创建一个数据卷
 
+```
+docker run -d -P --name web -v /webapp training/webapp python app.py
+```
+
+删除数据卷
+
+```
+docker rm -v //删除容器的时候同时移除数据卷
+```
+
+挂载一个主机目录作为数据卷
+
+```
+docker run -d -P --name web -v /src/webapp:/opt/webapp training/webapp python app.py
+```
+
+冒号前为源,后为容器内地址
+
+```
+docker run -d -P --name web -v /src/webapp:/opt/webapp:rotraining/webapp python app.py
+```
+
+:ro 之后,就挂载为只读
+
+挂载一个本地主机文件作为数据卷
+
+```
+docker run --rm -it -v ~/.bash_history:/.bash_history ubuntu /bin/bash  //记录在容器中输入过的命令
+```
+
+数据卷容器
+
+创建一个dbdata的数据卷
+
+```
+docker run -d -v /dbdata --name dbdata training/postgresecho Data-only container for postgres
+```
+
+其他容器中使用 --volumes-from 来挂载dbdata容器中的数据卷
+
+```
+$ sudo docker run -d --volumes-from dbdata --name db1 training/postgres
+$ sudo docker run -d --volumes-from dbdata --name db2 training/postgres
+```
+
+使用 --volumes-from所挂载的数据卷并不需要保持在运行状态
+
+利用数据卷容器备份,恢复,迁移数据卷
+
+备份
+
+```
+$ sudo docker run --volumes-from dbdata -v $(pwd):/backup ubuntu
+tar cvf /backup/backup.tar /dbdata
+```
+
+容器启动后，使用了 tar 命令来将 dbdata 卷备份为容器中 /backup/backup.tar
+文件，也就是主机当前目录下的名为 backup.tar 的文件
+
+恢复
+
+先创建一个带有空数据卷的容器dbdata2
+
+```
+docker run -v /dbdata --name dbdata2 ubuntu /bin/bash
+```
+
+创建另一个容器,挂载dbdata2容器卷中的数据卷,并使用 untar 解压备份文件到挂载的容器卷中
+
+```
+docker run --volumes-from dbdata2 -v $(pwd):/backup busybox tar xvf /backup/backup.tar
+```
+
+---
 
 Dockerfile 定制镜像
 
@@ -136,6 +217,8 @@ docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/
 docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/local/etc/redis/redis.conf --name redis-slave2 -d redis redis-server /usr/local/etc/redis/redis.conf
 docker run --link redis-master:redis-master -v /usr/local/redis/redis.conf:/usr/local/etc/redis/redis.conf --name redis-slave3 -d redis redis-server /usr/local/etc/redis/redis.conf
 ```
+
+---
 
 Dockerfile  指令
 
@@ -284,4 +367,6 @@ ONBUILD   构建下一级镜像生效
 ```
 格式： ONBUILD <其它指令>
 ```
+
+---
 
