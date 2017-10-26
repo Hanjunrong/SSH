@@ -49,11 +49,11 @@ docker inspect 容器ID
     docker rmi 
 删除所有 docker rmi $(docker images -q)
 
-虚悬镜像
-
 ```
 docker	rmi	$(docker	images	-q	-f	dangling=true)
 ```
+
+清除所有属于终止状态的容器  docker  rm  $(docker ps -a -q)
 
 查看镜像内的历史记录
 
@@ -64,6 +64,47 @@ docker history nginx:v2
 慎用 docker commit
 
     docker commit --author "New Hello" --message "修改了默认网页" webserver nginx:v2
+attach 命令
+
+```
+docker attach [容器名称]
+```
+
+当多个窗口同时attach到同一个容器,所有窗口同步显示
+
+nsenter 命令
+
+...
+
+导出容器
+
+```
+docker export [容器ID] > [导出名称].tar
+```
+
+docker save 保存镜像到本地,含镜像历史
+
+导入容器快照
+
+```
+cat ubuntu.tar | sudo docker import - test/ubuntu:v1.0
+```
+
+docker load也可以导入镜像存储文件到本地镜像库,含镜像历史
+
+指定URL导入
+
+```
+docker import http://example.com/exampleimage.tgz example/imagerepo
+```
+
+查找镜像
+
+```
+docker search centos //查找官方镜像
+```
+
+
 
 Dockerfile 定制镜像
 
