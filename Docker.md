@@ -55,6 +55,12 @@ docker	rmi	$(docker	images	-q	-f	dangling=true)
 
 清除所有属于终止状态的容器  docker  rm  $(docker ps -a -q)
 
+虚悬镜像
+
+```
+docker	rmi	$(docker	images	-q	-f	dangling=true)
+```
+
 查看镜像内的历史记录
 
 ```
